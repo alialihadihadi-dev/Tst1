@@ -38,7 +38,7 @@
         .hero h1 { font-size: 42px; font-weight: 700; margin-bottom: 15px; }
         .hero p { font-size: 18px; max-width: 600px; margin-bottom: 30px; color: #ddd; }
         .hero-btns { display: flex; gap: 15px; }
-        .btn-main { background: var(--accent); color: white; padding: 12px 25px; text-decoration: none; font-weight: 600; transition: var(--transition); }
+        .btn-main { background: var(--accent); color: white; padding: 12px 25px; text-decoration: none; font-weight: 600; transition: var(--transition); border: none; cursor: pointer; }
         .btn-main:hover { background: var(--primary); }
         .btn-wa-hero { background: #25D366; color: white; padding: 12px 25px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: var(--transition); }
 
@@ -88,8 +88,8 @@
 
         /* 8. Testimonials */
         .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .testi-card { background: #fff; border: 1px solid #eee; padding: 25px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        .testi-stars { color: #ffc107; margin-bottom: 10px; }
+        .testi-card { background: #fff; border: 1px solid #eee; padding: 25px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); text-align: right; }
+        .testi-stars { color: #ffc107; margin-bottom: 10px; text-align: right; }
 
         /* 9. FAQs */
         .faqs { background: var(--bg-light); }
@@ -110,41 +110,23 @@
 <body>
 
     <header>
-        <a href="#" class="logo" id="logo-text">متجر الملابس</a>
+        <a href="#" class="logo" id="logo-text">جاري التحميل...</a>
         <ul class="nav-links">
             <li><a href="#">الرئيسية</a></li>
-            <li><a href="#categories">الأقسام</a></li>
             <li><a href="#products">المنتجات</a></li>
+            <li><a href="#why-us">لماذا نحن</a></li>
             <li><a href="#testimonials">الآراء</a></li>
+            <li><a href="#faqs">الأسئلة الشائعة</a></li>
         </ul>
-        <a href="https://api.whatsapp.com/send?phone=201068424130" id="header-wa-btn" class="btn-header-wa" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
+        <a href="#" id="header-wa-btn" class="btn-header-wa" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
     </header>
 
     <section class="hero">
-        <h1 id="hero-title">أحدث صيحات الموضة والملابس</h1>
-        <p id="hero-desc">اكتشف تشكيلتنا الجديدة والمميزة بأفضل الأسعار وأعلى جودة تليق بك.</p>
+        <h1 id="hero-title">جاري تحميل العناوين...</h1>
+        <p id="hero-desc">يرجى الانتظار ثوانٍ لجلب البيانات السحابية الحية.</p>
         <div class="hero-btns">
             <a href="#products" class="btn-main">تصفح المنتجات</a>
-            <a href="https://api.whatsapp.com/send?phone=201068424130" id="hero-wa-btn" class="btn-wa-hero" target="_blank"><i class="fab fa-whatsapp"></i> واتساب البراند</a>
-        </div>
-    </section>
-
-    <section id="categories">
-        <h2 class="sec-title">أقسام المتجر</h2>
-        <p class="sec-desc">تصفح المنتجات المتاحة حسب الفئة</p>
-        <div class="categories-container" id="filter-buttons-container">
-            <button onclick="filterCategory('all', this)" class="cat-btn-filter active">الكل</button>
-        </div>
-    </section>
-
-    <section class="features">
-        <h2 class="sec-title">لماذا تتسوق معنا؟</h2>
-        <p class="sec-desc">المزايا التي نضمنها لك في كل تجربة شراء</p>
-        <div class="features-grid">
-            <div class="feat-box"><i class="fas fa-award"></i><h3>جودة عالية</h3><p>خامات ممتازة منتقاة بعناية فائقة لتناسب ذوقك.</p></div>
-            <div class="feat-box"><i class="fas fa-tags"></i><h3>أسعار مناسبة</h3><p>أفضل قيمة حقيقية مقابل سعر عادل ومنافس.</p></div>
-            <div class="feat-box"><i class="fas fa-truck"></i><h3>توصيل سريع</h3><p>شحن سريع وآمن حتى باب منزلك لجميع المحافظات.</p></div>
-            <div class="feat-box"><i class="fas fa-headset"></i><h3>خدمة عملاء</h3><p>فريق دعم متواجد دائماً لمساعدتك والإجابة على استفساراتك.</p></div>
+            <a href="#" id="hero-wa-btn" class="btn-wa-hero" target="_blank"><i class="fab fa-whatsapp"></i> واتساب البراند</a>
         </div>
     </section>
 
@@ -162,13 +144,11 @@
         <a href="#products" class="btn-main">اغتنم الفرصة الآن</a>
     </section>
 
-    <section class="why-us">
+    <section class="why-us" id="why-us">
         <h2 class="sec-title">نقاط القوة والثقة</h2>
         <p class="sec-desc">التزامنا تجاه عملائنا الكرام</p>
-        <div class="why-content" id="why-text">
-            <div class="why-point"><i class="fas fa-check-circle"></i><p>فحص كامل ومعاينة للمنتجات والملابس قبل الاستلام.</p></div>
-            <div class="why-point"><i class="fas fa-check-circle"></i><p>أقمشة قطنية مريحة لا تتأثر بالغسيل المستمر.</p></div>
-            <div class="why-point"><i class="fas fa-check-circle"></i><p>سهولة تامة في الاستبدال أو الاسترجاع في حالة وجود أي عيوب.</p></div>
+        <div class="why-content" id="why-container">
+            <!-- سيتم توليد نقاط لماذا نحن هنا تلقائياً -->
         </div>
     </section>
 
@@ -176,28 +156,28 @@
         <h2 class="sec-title">ماذا يقول عملاؤنا؟</h2>
         <p class="sec-desc">شهادات وتجارب حقيقية نفخر بها</p>
         <div class="testi-grid" id="testi-container">
-            <div class="testi-card">
-                <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p style="font-style:italic; color:#555; margin-bottom:10px;">"الخامة بجد تحفة والتيشرت مقاسه مظبوط جداً والتقفيل بروفيشنال. دي مش هتبقى آخر مرة أطلب منكم أكيد."</p>
-                <strong style="font-size:14px; color:#222;">- أحمد محمود</strong>
-            </div>
-            <div class="testi-card">
-                <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p style="font-style:italic; color:#555; margin-bottom:10px;">"الفستان واو ونفس الصورة بالظبط والألوان زاهية، والتوصيل كان سريع جداً لـ باب البيت شكراً لذوقكم."</p>
-                <strong style="font-size:14px; color:#222;">- سارة علي</strong>
-            </div>
+            <div class="col-span-full text-center py-4 text-gray-400">جاري جلب الآراء...</div>
+        </div>
+    </section>
+
+    <section class="faqs" id="faqs">
+        <h2 class="sec-title">الأسئلة الشائعة</h2>
+        <p class="sec-desc">إجابات سريعة على أهم استفساراتكم</p>
+        <div class="faq-container" id="faqs-container">
+            <div class="col-span-full text-center py-4 text-gray-400">جاري جلب الأسئلة...</div>
         </div>
     </section>
 
     <footer>
         <p>&copy; ٢٠٢٦ جميع الحقوق محفوظة لـ <span id="footer-brand">متجر الملابس والأزياء</span></p>
         <div class="footer-socials">
-            <a href="https://facebook.com" id="fb-link" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://instagram.com" id="ig-link" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" id="fb-link" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="#" id="ig-link" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
     </footer>
 
     <script>
+        // إعدادات Firebase الخاصة بمشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyC8gv5mxQ2JaMDkQeWTpnit1CHgMh_8zL0",
             authDomain: "tricycle-for-clothes.firebaseapp.com",
@@ -211,66 +191,104 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let allProducts = [];
-        const myWhatsapp = "201068424130"; // تحديث رقمك الجديد
-
-        database.ref('products').on('value', (snapshot) => {
+        // الاستماع لايف لمسار اللوحة الفاخرة الموحد brandStoreData
+        database.ref('brandStoreData').on('value', (snapshot) => {
             const data = snapshot.val();
-            const container = document.getElementById('products-container');
-            const filterContainer = document.getElementById('filter-buttons-container');
+            if(!data) return;
+
+            // 1. تحديث النصوص وقنوات التواصل
+            const brandName = data.brandName || "متجر الملابس";
+            const currentWhatsapp = data.whatsapp || "201068424130";
             
-            if(!data) {
-                container.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">لا توجد منتجات معروضة حالياً. ادخل للوحة التحكم لإضافة الملابس والأزياء!</div>';
-                return;
+            document.getElementById('logo-text').innerText = brandName;
+            document.getElementById('footer-brand').innerText = brandName;
+            document.getElementById('hero-title').innerText = data.heroTitle || "أحدث صيحات الموضة والملابس";
+            document.getElementById('hero-desc').innerText = data.heroDesc || "";
+            document.getElementById('offer-title').innerText = data.offerTitle || "عروض الموسم الحالية";
+            document.getElementById('offer-desc').innerText = data.offerDesc || "";
+
+            // تحديث روابط التواصل والواتساب
+            const waUrl = `https://api.whatsapp.com/send?phone=${currentWhatsapp}`;
+            document.getElementById('header-wa-btn').href = waUrl;
+            document.getElementById('hero-wa-btn').href = waUrl;
+            document.getElementById('fb-link').href = data.facebook || "https://facebook.com";
+            document.getElementById('ig-link').href = data.instagram || "https://instagram.com";
+
+            // 2. تحديث قسم "لماذا نحن"
+            const whyContainer = document.getElementById('why-container');
+            if(data.whyPoints) {
+                const lines = data.whyPoints.split('\n').filter(line => line.trim() !== '');
+                whyContainer.innerHTML = lines.map(line => `
+                    <div class="why-point">
+                        <i class="fas fa-check-circle"></i>
+                        <p>${line}</p>
+                    </div>
+                `).join('');
+            } else {
+                whyContainer.innerHTML = '<p class="text-center text-gray-400">سيتم إضافة نقاط القوة قريباً.</p>';
             }
 
-            allProducts = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            // 3. تحديث المنتجات
+            const productsContainer = document.getElementById('products-container');
+            if(data.products && data.products.length > 0) {
+                productsContainer.innerHTML = data.products.map(p => {
+                    const textMessage = `طلب شراء منتج: ${p.name}\nالسعر: ${p.price}`;
+                    const waOrderUrl = `https://api.whatsapp.com/send?phone=${currentWhatsapp}&text=${encodeURIComponent(textMessage)}`;
+                    return `
+                        <div class="prod-card">
+                            <div class="prod-img-wrapper">
+                                <img class="prod-img" src="${p.img || 'https://via.placeholder.com/300?text=No+Image'}" alt="${p.name}">
+                            </div>
+                            <div class="prod-info">
+                                <div>
+                                    <h3 class="prod-title">${p.name}</h3>
+                                </div>
+                                <div>
+                                    <p class="prod-price">${p.price}</p>
+                                    <a href="${waOrderUrl}" class="btn-prod-order" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+            } else {
+                productsContainer.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">لا توجد منتجات حالياً، أضف بعض المنتجات من لوحة التحكم!</div>';
+            }
 
-            const categories = ['all', ...new Set(allProducts.map(p => p.category))];
-            filterContainer.innerHTML = categories.map(cat => {
-                const label = cat === 'all' ? 'الكل' : cat;
-                const activeClass = cat === 'all' ? 'active' : '';
-                return `<button onclick="filterCategory('${cat}', this)" class="cat-btn-filter ${activeClass}">${label}</button>`;
-            }).join('');
+            // 4. تحديث آراء العملاء
+            const testiContainer = document.getElementById('testi-container');
+            if(data.testimonials && data.testimonials.length > 0) {
+                testiContainer.innerHTML = data.testimonials.map(t => `
+                    <div class="testi-card">
+                        <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        <p style="font-style:italic; color:#555; margin-bottom:10px;">"${t.text}"</p>
+                        <strong style="font-size:14px; color:#222;">- ${t.author}</strong>
+                    </div>
+                `).join('');
+            } else {
+                testiContainer.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400">سيتم نشر تقييمات العملاء قريباً.</div>';
+            }
 
-            renderProducts(allProducts);
+            // 5. تحديث الأسئلة الشائعة
+            const faqsContainer = document.getElementById('faqs-container');
+            if(data.faqs && data.faqs.length > 0) {
+                faqsContainer.innerHTML = data.faqs.map(f => `
+                    <div class="faq-item">
+                        <div class="faq-q" onclick="toggleFaq(this)">${f.q} <i class="fas fa-chevron-down"></i></div>
+                        <div class="faq-a"><p>${f.a}</p></div>
+                    </div>
+                `).join('');
+            } else {
+                faqsContainer.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400">لا توجد أسئلة شائعة حالياً.</div>';
+            }
         });
 
-        function renderProducts(products) {
-            const container = document.getElementById('products-container');
-            container.innerHTML = products.map(p => {
-                const textMessage = `طلب شراء منتج: ${p.title}\nالقسم: ${p.category}\nالسعر: ${p.price} ج.م`;
-                const waOrderUrl = `https://api.whatsapp.com/send?phone=${myWhatsapp}&text=${encodeURIComponent(textMessage)}`;
-                
-                return `
-                    <div class="prod-card">
-                        <div class="prod-img-wrapper">
-                            <img class="prod-img" src="${p.image || 'https://via.placeholder.com/300?text=No+Image'}" alt="${p.title}">
-                            <span class="prod-badge">${p.category}</span>
-                        </div>
-                        <div class="prod-info">
-                            <div>
-                                <h3 class="prod-title">${p.title}</h3>
-                                <p class="prod-desc">${p.description || ''}</p>
-                            </div>
-                            <div>
-                                <p class="prod-price">${p.price} ج.م</p>
-                                <a href="${waOrderUrl}" class="btn-prod-order" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join('');
-        }
-
-        function filterCategory(category, element) {
-            document.querySelectorAll('.cat-btn-filter').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-
-            if(category === 'all') {
-                renderProducts(allProducts);
-            } else {
-                const filtered = allProducts.filter(p => p.category === category);
-                renderProducts(filtered);
+        // دالة فتح وإغلاق الأسئلة الشائعة برفق
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            const isSubmittion = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+            if (!isSubmittion) {
+                item.classList.add('active');
             }
         }
     </script>
