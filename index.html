@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -49,11 +49,59 @@
         .sec-title::after { content: ''; display: block; width: 40px; height: 3px; background: var(--accent); margin: 8px auto 0; }
         .sec-desc { color: var(--text-light); margin-bottom: 40px; font-size: 15px; }
 
-        /* 3. Categories */
-        .categories-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 30px; justify-content: start; }
-        @media (min-width: 769px) { .categories-container { justify-content: center; } }
-        .cat-btn-filter { background: var(--bg-light); border: 1px solid #eee; padding: 10px 24px; font-size: 13px; font-weight: 600; cursor: pointer; transition: var(--transition); border-radius: 4px; white-space: nowrap; }
-        .cat-btn-filter.active, .cat-btn-filter:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        /* 3. Categories Showcase (luxury, mobile-first, animated) */
+        .categories-section {
+            --cat-primary: #C9A36B;
+            --cat-radius: 20px;
+            --cat-duration: 600ms;
+            --cat-y: 24px;
+        }
+        .categories-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .cat-card {
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            border-radius: var(--cat-radius);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 22px 8px;
+            aspect-ratio: 1/1;
+            text-decoration: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            will-change: transform;
+            --y: var(--cat-y);
+            --scale: 1;
+            opacity: 0;
+            transform: translateY(var(--y)) scale(var(--scale));
+            transition: opacity var(--cat-duration) ease, transform var(--cat-duration) cubic-bezier(.22,1,.36,1), box-shadow 300ms ease;
+        }
+        .cat-card.is-visible { opacity: 1; --y: 0px; }
+        .cat-card.is-pressed { --scale: 0.96; transition-duration: 120ms; }
+        .cat-icon { width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; color: var(--cat-primary); }
+        .cat-icon i { font-size: 26px; transition: transform 300ms ease; }
+        .cat-name { font-size: clamp(12px, 3vw, 15px); font-weight: 700; text-align: center; line-height: 1.3; }
+        .cat-ripple { position: absolute; border-radius: 50%; background: rgba(201,163,107,0.25); transform: scale(0); animation: catRipple 500ms ease-out; pointer-events: none; }
+        @keyframes catRipple { to { transform: scale(2.2); opacity: 0; } }
+        @media (hover: hover) and (pointer: fine) {
+            .cat-card:hover { --y: -8px; box-shadow: 0 16px 30px rgba(0,0,0,0.12); }
+            .cat-card:hover .cat-icon i { transform: scale(1.15); }
+        }
+        @media (min-width: 1024px) {
+            .categories-showcase { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+        }
 
         /* 4. Features */
         .features { background: var(--bg-light); }
@@ -166,7 +214,7 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .floating-wa { width: 52px; height: 52px; font-size: 24px; left: 15px; bottom: 15px; }
+            .floating-wa { width: 46px; height: 46px; font-size: 20px; left: 12px; bottom: 12px; }
             .products-grid { gap: 12px; }
             .prod-card { min-width: 180px; max-width: 180px; }
             .prod-img-wrapper { aspect-ratio: 1/1; }
@@ -176,10 +224,21 @@
             .nav-links { display: none; }
             .hero h1 { font-size: 30px; }
             footer { flex-direction: column; text-align: center; }
+
+            /* عنوان الموقع (الشعار) وزر الواتساب في الهيدر تصغير للموبايل */
+            header { padding: 10px 4%; }
+            .logo { font-size: 15px; gap: 6px; }
+            .logo img { height: 36px; }
+            .btn-header-wa { padding: 6px 10px; font-size: 11px; gap: 5px; }
+            .btn-header-wa i { font-size: 13px; }
+        }
+        @media (max-width: 380px) {
+            .btn-header-wa span.wa-label { display: none; }
         }
     </style>
 </head>
 <body>
+
 
     <header>
         <a href="#" class="logo">
@@ -193,7 +252,7 @@
             <li><a href="#testimonials">الآراء</a></li>
             <li><a href="#faqs">الأسئلة الشائعة</a></li>
         </ul>
-        <a href="#" id="header-wa-btn" class="btn-header-wa" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
+        <a href="#" id="header-wa-btn" class="btn-header-wa" target="_blank"><i class="fab fa-whatsapp"></i> <span class="wa-label">اطلب عبر واتساب</span></a>
     </header>
 
     <section class="hero" id="hero-section">
@@ -202,6 +261,37 @@
         <div class="hero-btns">
             <a href="#products" class="btn-main">تصفح المنتجات</a>
             <a href="#" id="hero-wa-btn" class="btn-wa-hero" target="_blank"><i class="fab fa-whatsapp"></i> واتساب البراند</a>
+        </div>
+    </section>
+
+    <section class="categories-section" id="categories" aria-label="أقسام المتجر">
+        <h2 class="sec-title">أقسام المتجر</h2>
+        <p class="sec-desc">تصفح تشكيلاتنا المتنوعة والحصرية</p>
+        <div class="categories-showcase" id="categories-showcase">
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-person-dress"></i></div>
+                <span class="cat-name">ملابس حريمي</span>
+            </a>
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-person"></i></div>
+                <span class="cat-name">ملابس رجالي</span>
+            </a>
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-child"></i></div>
+                <span class="cat-name">ملابس أطفال</span>
+            </a>
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-bed"></i></div>
+                <span class="cat-name">مفروشات</span>
+            </a>
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-crown"></i></div>
+                <span class="cat-name">تجهيز عرائس</span>
+            </a>
+            <a href="#products" class="cat-card">
+                <div class="cat-icon"><i class="fas fa-gem"></i></div>
+                <span class="cat-name">عطور وإكسسوارات</span>
+            </a>
         </div>
     </section>
 
@@ -303,6 +393,10 @@
             document.getElementById('hero-desc').innerText = data.heroDesc || "";
             document.getElementById('offer-title').innerText = data.offerTitle || "عروض الموسم الحالية";
             document.getElementById('offer-desc').innerText = data.offerDesc || "";
+
+            const offersSection = document.getElementById('offers');
+            const offerBg = data.offerBgUrl || 'https://images.unsplash.com/photo-1479064555552-3ef4979f8908?q=80&w=1600';
+            offersSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${offerBg}')`;
 
             // تحديث روابط التواصل والواتساب
             const waUrl = `https://api.whatsapp.com/send?phone=${currentWhatsapp}`;
@@ -415,5 +509,60 @@
         enableAutoSlider("products-container");
         enableAutoSlider("testi-container");
     </script>
+
+    <!-- ============================================================
+         سكريبت مستقل لحركات "أقسام المتجر" (Vanilla JS فقط، بدون مكتبات)
+         - IntersectionObserver: ظهور تدريجي متتابع (Fade In + TranslateY)
+         - الضغط: تصغير البطاقة + تأثير Ripple خفيف
+         - المرور بالماوس (Desktop فقط): يتم عبر CSS بـ hover/pointer:fine
+       ============================================================ -->
+    <script>
+        (function initCategoriesShowcase() {
+            const cards = document.querySelectorAll('#categories-showcase .cat-card');
+            if (!cards.length) return;
+
+            // 1) ظهور تدريجي متتابع عند دخول القسم في الشاشة
+            const revealObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const card = entry.target;
+                    const index = Array.from(cards).indexOf(card);
+                    card.style.transitionDelay = `${index * 80}ms`;
+                    card.classList.add('is-visible');
+                    obs.unobserve(card);
+                });
+            }, { threshold: 0.15 });
+
+            cards.forEach((card) => revealObserver.observe(card));
+
+            // 2) تأثير الضغط (تصغير 96%) + Ripple خفيف، يعمل على اللمس والماوس معاً
+            cards.forEach((card) => {
+                card.addEventListener('pointerdown', (e) => {
+                    card.classList.add('is-pressed');
+                    spawnRipple(card, e);
+                });
+                ['pointerup', 'pointerleave', 'pointercancel'].forEach((evt) => {
+                    card.addEventListener(evt, () => card.classList.remove('is-pressed'));
+                });
+            });
+
+            function spawnRipple(card, e) {
+                const rect = card.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const originX = (e.clientX ?? rect.left + rect.width / 2) - rect.left - size / 2;
+                const originY = (e.clientY ?? rect.top + rect.height / 2) - rect.top - size / 2;
+
+                const ripple = document.createElement('span');
+                ripple.className = 'cat-ripple';
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${originX}px`;
+                ripple.style.top = `${originY}px`;
+
+                card.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            }
+        })();
+    </script>
 </body>
 </html>
+
