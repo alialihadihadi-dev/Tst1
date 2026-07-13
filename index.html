@@ -196,7 +196,7 @@
         <a href="#" id="header-wa-btn" class="btn-header-wa" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="hero-section">
         <h1 id="hero-title">جاري تحميل العناوين...</h1>
         <p id="hero-desc">يرجى الانتظار ثوانٍ لجلب البيانات السحابية الحية.</p>
         <div class="hero-btns">
@@ -292,6 +292,13 @@
 
             document.getElementById('logo-text').innerText = brandName;
             document.getElementById('footer-brand').innerText = brandName;
+            const logoImg = document.getElementById('logo-img');
+            logoImg.src = data.logoUrl || 'logo.png';
+
+            const heroSection = document.getElementById('hero-section');
+            const heroBg = data.heroBgUrl || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1600';
+            heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${heroBg}')`;
+
             document.getElementById('hero-title').innerText = data.heroTitle || "أحدث صيحات الموضة والملابس";
             document.getElementById('hero-desc').innerText = data.heroDesc || "";
             document.getElementById('offer-title').innerText = data.offerTitle || "عروض الموسم الحالية";
