@@ -110,7 +110,7 @@
         .why-point { margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
         .why-point i { color: var(--accent); margin-top: 5px; }
 
-        /* 8. Testimonials (horizontal scroll slider) */
+        /* 8. Testimonials (screenshots slider) */
         .testi-grid {
             display: flex;
             overflow-x: auto;
@@ -122,11 +122,12 @@
             scrollbar-width: none;
         }
         .testi-grid::-webkit-scrollbar { display: none; }
-        .testi-card { min-width: 300px; max-width: 300px; flex: 0 0 auto; scroll-snap-align: start; background: #fff; border: 1px solid #eee; padding: 25px; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); text-align: right; }
-        .testi-stars { color: #ffc107; margin-bottom: 10px; text-align: right; }
+        .testi-card { min-width: 240px; max-width: 240px; flex: 0 0 auto; scroll-snap-align: start; border-radius: 10px; overflow: hidden; border: 1px solid #eee; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); transition: var(--transition); cursor: pointer; }
+        .testi-card:hover { transform: translateY(-5px); box-shadow: 0 10px 22px rgba(0,0,0,0.12); }
+        .testi-img { width: 100%; height: auto; display: block; }
 
         @media (max-width: 768px) {
-            .testi-card { min-width: 240px; max-width: 240px; }
+            .testi-card { min-width: 190px; max-width: 190px; }
         }
 
         /* 9. FAQs */
@@ -341,16 +342,16 @@
                 productsContainer.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">لا توجد منتجات حالياً، أضف بعض المنتجات من لوحة التحكم!</div>';
             }
 
-            // 4. تحديث آراء العملاء
+            // 4. تحديث آراء العملاء (صور سكرين شوت من الواتساب، الرابط بيتحط من لوحة التحكم)
             const testiContainer = document.getElementById('testi-container');
             if (data.testimonials && data.testimonials.length > 0) {
-                testiContainer.innerHTML = data.testimonials.map(t => `
-                    <div class="testi-card">
-                        <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                        <p style="font-style:italic; color:#555; margin-bottom:10px;">"${escapeHtml(t.text)}"</p>
-                        <strong style="font-size:14px; color:#222;">- ${escapeHtml(t.author)}</strong>
-                    </div>
-                `).join('');
+                testiContainer.innerHTML = data.testimonials.map(t => {
+                    const imgUrl = escapeHtml(t.img || t);
+                    return `
+                        <div class="testi-card" onclick="window.open('${imgUrl}', '_blank')">
+                            <img class="testi-img" src="${imgUrl}" alt="رأي عميل" loading="lazy">
+                        </div>`;
+                }).join('');
             } else {
                 testiContainer.innerHTML = '<div class="col-span-full text-center py-4 text-gray-400">سيتم نشر تقييمات العملاء قريباً.</div>';
             }
