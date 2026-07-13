@@ -34,6 +34,13 @@ text-decoration:none;
 font-size:24px;
 font-weight:700;
 color:var(--primary);
+}
+
+.logo img{
+height:55px;
+width:auto;
+display:block;
+}
         .nav-links { display: flex; list-style: none; gap: 20px; }
         .nav-links a { text-decoration: none; color: var(--text-dark); font-weight: 600; transition: var(--transition); font-size: 14px; }
         .nav-links a:hover { color: var(--accent); }
@@ -229,7 +236,10 @@ text-align: .nav-links { display: none; } .hero h1 { font-size: 30px; } footer {
     <header>
         <a href="#" class="logo">
     <img id="logo-img" src="logo.png" alt="Logo" style="height:55px;">
-    <span id="logo-text">جاري 
+    <a href="#" class="logo">
+    <img id="logo-img" src="logo.png" alt="Logo" loading="lazy">
+    <span id="logo-text">جاري التحميل...</span>
+</a> 
         <ul class="nav-links">
             <li><a href="#">الرئيسية</a></li>
             <li><a href="#products">المنتجات</a></li>
@@ -418,6 +428,6 @@ let direction=1;
 
 setInterval(()=>{
 
-if(!productSlider)retu
+if(!productSlider) return;
 </body>
 </html>
