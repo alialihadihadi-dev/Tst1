@@ -47,6 +47,7 @@
 
     <div class="box">
         <h3>٣. قسم آراء العملاء</h3>
+        <p class="hint" style="margin-bottom:15px;">الآراء بتظهر في الموقع كصور سكرين شوت (من محادثات الواتساب مثلاً). ألصق رابط الصورة المباشر لكل رأي؛ رفعها ممكن يكون على Imgur أو Firebase Storage أو أي مستضيف صور تاني.</p>
         <div id="testi-list"></div>
         <button onclick="addEmptyTesti()">+ إضافة رأي عميل</button>
     </div>
@@ -114,7 +115,7 @@
             document.getElementById('tgChatId').value = data.tgChatId || '';
 
             if (data.products) data.products.forEach(p => addProductRow(p.name, p.price, p.img));
-            if (data.testimonials) data.testimonials.forEach(t => addTestiRow(t.text, t.author));
+            if (data.testimonials) data.testimonials.forEach(t => addTestiRow(typeof t === 'string' ? t : (t.img || '')));
             if (data.faqs) data.faqs.forEach(f => addFaqRow(f.q, f.a));
         }).catch(err => {
             console.error(err);
@@ -132,15 +133,26 @@
         }
         function addEmptyProduct() { addProductRow(); }
 
-        function addTestiRow(text = '', author = '') {
+        function addTestiRow(img = '') {
             const div = document.createElement('div'); div.className = 'item-row testi-item';
             div.innerHTML = `
-                <input type="text" placeholder="نص التقييم والرأي" value="${escapeAttr(text)}" style="width:60%; margin-left:1%;">
-                <input type="text" placeholder="اسم العميل" value="${escapeAttr(author)}" style="width:30%; margin-left:1%;">
+                <input type="text" class="testi-img-input" placeholder="رابط صورة (سكرين شوت رأي العميل من الواتساب)" value="${escapeAttr(img)}" style="width:65%; margin-left:1%;" oninput="updateTestiPreview(this)">
+                <img class="testi-preview" src="${escapeAttr(img)}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; vertical-align:middle; margin-left:1%; ${img ? '' : 'display:none;'}" onerror="this.style.display='none';">
                 <button onclick="removeRow(this)" style="background:red; padding:5px 10px;">حذف</button>`;
             document.getElementById('testi-list').appendChild(div);
         }
-        function addEmptyTesti() { addTestiRow(); }
+        function addEmptyTesti() { addTestiRow(''); }
+
+        // تحديث المعاينة المصغّرة لصورة رأي العميل أثناء الكتابة
+        function updateTestiPreview(input) {
+            const preview = input.parentElement.querySelector('.testi-preview');
+            if (input.value.trim()) {
+                preview.src = input.value.trim();
+                preview.style.display = 'inline-block';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
 
         function addFaqRow(q = '', a = '') {
             const div = document.createElement('div'); div.className = 'item-row faq-item-row';
@@ -205,8 +217,8 @@
 
             const testimonials = [];
             document.querySelectorAll('.testi-item').forEach(el => {
-                const inputs = el.querySelectorAll('input');
-                testimonials.push({ text: inputs[0].value, author: inputs[1].value });
+                const url = el.querySelector('.testi-img-input').value.trim();
+                if (url) testimonials.push({ img: url });
             });
 
             const faqs = [];
