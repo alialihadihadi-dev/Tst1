@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <style>
         body { font-family: 'Cairo', sans-serif; background: #f4f6f9; padding: 20px; text-align: right; }
         .box { max-width: 800px; background: white; margin: 20px auto; padding: 25px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
@@ -18,6 +19,12 @@
         button { background: #0b0b0b; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
         button:hover { background: #c5a880; }
         .item-row { background: #fafafa; padding: 10px; border: 1px dashed #ccc; margin-bottom: 10px; border-radius: 4px; }
+        .upload-wrap { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; margin-left: 1%; }
+        .upload-btn { background: #c5a880; padding: 8px 12px; font-size: 12px; white-space: nowrap; }
+        .upload-btn:hover { background: #0b0b0b; }
+        .upload-progress-bar { width: 60px; height: 6px; background: #eee; border-radius: 3px; overflow: hidden; display: none; }
+        .upload-progress-fill { height: 100%; width: 0%; background: #25D366; transition: width 0.2s; }
+        .upload-status { font-size: 11px; color: #888; }
         .status-msg { margin-top: 12px; font-weight: bold; font-size: 14px; }
         .status-ok { color: #1ebe5d; }
         .status-err { color: #d13a3a; }
@@ -29,6 +36,31 @@
         <h2>لوحة إدارة محتوى المتجر</h2>
         <h3>١. النصوص العامة والعروض وقنوات التواصل</h3>
         <div class="group"><label>اسم البراند</label><input type="text" id="brandName"></div>
+
+        <div class="group">
+            <label>شعار المتجر (Logo)</label>
+            <input type="text" id="logoUrl" placeholder="رابط الشعار المباشر" oninput="updatePreview(this, '#logoPreview')">
+            <span class="upload-wrap">
+                <input type="file" accept="image/*" class="upload-file-input" style="display:none;" onchange="uploadSingleImage(this, 'branding', 'logoUrl', 'logoPreview')">
+                <button type="button" class="upload-btn" onclick="this.parentElement.querySelector('.upload-file-input').click()">رفع صورة</button>
+                <span class="upload-progress-bar"><span class="upload-progress-fill"></span></span>
+                <span class="upload-status"></span>
+            </span>
+            <img id="logoPreview" src="" style="width:50px; height:50px; object-fit:contain; border-radius:4px; vertical-align:middle; margin-top:8px; display:none;" onerror="this.style.display='none';">
+        </div>
+
+        <div class="group">
+            <label>صورة خلفية الواجهة الرئيسية (Hero Background)</label>
+            <input type="text" id="heroBgUrl" placeholder="رابط صورة الخلفية المباشر" oninput="updatePreview(this, '#heroBgPreview')">
+            <span class="upload-wrap">
+                <input type="file" accept="image/*" class="upload-file-input" style="display:none;" onchange="uploadSingleImage(this, 'branding', 'heroBgUrl', 'heroBgPreview')">
+                <button type="button" class="upload-btn" onclick="this.parentElement.querySelector('.upload-file-input').click()">رفع صورة</button>
+                <span class="upload-progress-bar"><span class="upload-progress-fill"></span></span>
+                <span class="upload-status"></span>
+            </span>
+            <img id="heroBgPreview" src="" style="width:90px; height:50px; object-fit:cover; border-radius:4px; vertical-align:middle; margin-top:8px; display:none;" onerror="this.style.display='none';">
+        </div>
+
         <div class="group"><label>عنوان الواجهة الرئيسية</label><input type="text" id="heroTitle"></div>
         <div class="group"><label>وصف الواجهة الرئيسية</label><textarea id="heroDesc"></textarea></div>
         <div class="group"><label>عنوان بانر العروض</label><input type="text" id="offerTitle"></div>
@@ -41,13 +73,14 @@
 
     <div class="box">
         <h3>٢. قسم أفضل المنتجات</h3>
+        <p class="hint" style="margin-bottom:15px;">اكتب رابط صورة مباشر، أو ارفع الصورة من جهازك مباشرة زر "رفع صورة" وهيتحط الرابط تلقائي.</p>
         <div id="products-list"></div>
         <button onclick="addEmptyProduct()">+ إضافة منتج جديد</button>
     </div>
 
     <div class="box">
         <h3>٣. قسم آراء العملاء</h3>
-        <p class="hint" style="margin-bottom:15px;">الآراء بتظهر في الموقع كصور سكرين شوت (من محادثات الواتساب مثلاً). ألصق رابط الصورة المباشر لكل رأي؛ رفعها ممكن يكون على Imgur أو Firebase Storage أو أي مستضيف صور تاني.</p>
+        <p class="hint" style="margin-bottom:15px;">الآراء بتظهر في الموقع كصور سكرين شوت (من محادثات الواتساب مثلاً). اكتب رابط الصورة المباشر أو ارفعها من جهازك مباشرة.</p>
         <div id="testi-list"></div>
         <button onclick="addEmptyTesti()">+ إضافة رأي عميل</button>
     </div>
@@ -85,6 +118,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const storage = firebase.storage();
 
         // حماية القيم من كسر الـ HTML عند إدراجها في attributes (مثلاً لو المنتج فيه علامة اقتباس)
         function escapeAttr(str) {
@@ -103,6 +137,10 @@
             if (!data) return;
 
             document.getElementById('brandName').value = data.brandName || '';
+            document.getElementById('logoUrl').value = data.logoUrl || '';
+            document.getElementById('heroBgUrl').value = data.heroBgUrl || '';
+            updatePreview(document.getElementById('logoUrl'), '#logoPreview');
+            updatePreview(document.getElementById('heroBgUrl'), '#heroBgPreview');
             document.getElementById('heroTitle').value = data.heroTitle || '';
             document.getElementById('heroDesc').value = data.heroDesc || '';
             document.getElementById('offerTitle').value = data.offerTitle || '';
@@ -125,9 +163,16 @@
         function addProductRow(name = '', price = '', img = '') {
             const div = document.createElement('div'); div.className = 'item-row product-item';
             div.innerHTML = `
-                <input type="text" placeholder="اسم المنتج" value="${escapeAttr(name)}" style="width:30%; margin-left:1%;">
-                <input type="text" placeholder="السعر" value="${escapeAttr(price)}" style="width:20%; margin-left:1%;">
-                <input type="text" placeholder="رابط صورة المنتج المباشر" value="${escapeAttr(img)}" style="width:40%; margin-left:1%;">
+                <input type="text" placeholder="اسم المنتج" value="${escapeAttr(name)}" style="width:22%; margin-left:1%;">
+                <input type="text" placeholder="السعر" value="${escapeAttr(price)}" style="width:15%; margin-left:1%;">
+                <input type="text" class="prod-img-input" placeholder="رابط صورة المنتج المباشر" value="${escapeAttr(img)}" style="width:30%; margin-left:1%;" oninput="updatePreview(this, '.prod-preview')">
+                <span class="upload-wrap">
+                    <input type="file" accept="image/*" class="upload-file-input" style="display:none;" onchange="uploadFileToStorage(this, 'products')">
+                    <button type="button" class="upload-btn" onclick="this.parentElement.querySelector('.upload-file-input').click()">رفع صورة</button>
+                    <span class="upload-progress-bar"><span class="upload-progress-fill"></span></span>
+                    <span class="upload-status"></span>
+                </span>
+                <img class="prod-preview" src="${escapeAttr(img)}" style="width:40px; height:40px; object-fit:cover; border-radius:4px; vertical-align:middle; margin-left:1%; ${img ? '' : 'display:none;'}" onerror="this.style.display='none';">
                 <button onclick="removeRow(this)" style="background:red; padding:5px 10px;">حذف</button>`;
             document.getElementById('products-list').appendChild(div);
         }
@@ -136,16 +181,23 @@
         function addTestiRow(img = '') {
             const div = document.createElement('div'); div.className = 'item-row testi-item';
             div.innerHTML = `
-                <input type="text" class="testi-img-input" placeholder="رابط صورة (سكرين شوت رأي العميل من الواتساب)" value="${escapeAttr(img)}" style="width:65%; margin-left:1%;" oninput="updateTestiPreview(this)">
+                <input type="text" class="testi-img-input" placeholder="رابط صورة (سكرين شوت رأي العميل من الواتساب)" value="${escapeAttr(img)}" style="width:50%; margin-left:1%;" oninput="updatePreview(this, '.testi-preview')">
+                <span class="upload-wrap">
+                    <input type="file" accept="image/*" class="upload-file-input" style="display:none;" onchange="uploadFileToStorage(this, 'testimonials')">
+                    <button type="button" class="upload-btn" onclick="this.parentElement.querySelector('.upload-file-input').click()">رفع صورة</button>
+                    <span class="upload-progress-bar"><span class="upload-progress-fill"></span></span>
+                    <span class="upload-status"></span>
+                </span>
                 <img class="testi-preview" src="${escapeAttr(img)}" style="width:50px; height:50px; object-fit:cover; border-radius:4px; vertical-align:middle; margin-left:1%; ${img ? '' : 'display:none;'}" onerror="this.style.display='none';">
                 <button onclick="removeRow(this)" style="background:red; padding:5px 10px;">حذف</button>`;
             document.getElementById('testi-list').appendChild(div);
         }
         function addEmptyTesti() { addTestiRow(''); }
 
-        // تحديث المعاينة المصغّرة لصورة رأي العميل أثناء الكتابة
-        function updateTestiPreview(input) {
-            const preview = input.parentElement.querySelector('.testi-preview');
+        // تحديث المعاينة المصغّرة لأي حقل صورة أثناء الكتابة اليدوية للرابط
+        function updatePreview(input, previewSelector) {
+            const preview = input.parentElement.querySelector(previewSelector);
+            if (!preview) return;
             if (input.value.trim()) {
                 preview.src = input.value.trim();
                 preview.style.display = 'inline-block';
@@ -153,6 +205,88 @@
                 preview.style.display = 'none';
             }
         }
+
+        // منطق الرفع المشترك لأي ملف إلى Firebase Storage
+        function performUpload(file, folder, { onProgress, onError, onComplete }) {
+            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+            const path = `${folder}/${Date.now()}_${safeName}`;
+            const uploadTask = storage.ref(path).put(file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => onProgress(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)),
+                (error) => onError(error),
+                () => uploadTask.snapshot.ref.getDownloadURL().then(onComplete)
+            );
+        }
+
+        // ربط عناصر شريط التقدم والحالة بأي زر رفع
+        function bindUploadUi(wrap) {
+            const progressBar = wrap.querySelector('.upload-progress-bar');
+            const progressFill = wrap.querySelector('.upload-progress-fill');
+            const statusEl = wrap.querySelector('.upload-status');
+            return {
+                start() { progressBar.style.display = 'inline-block'; statusEl.textContent = 'جاري الرفع...'; },
+                progress(pct) { progressFill.style.width = pct + '%'; statusEl.textContent = pct + '%'; },
+                error(msg) {
+                    progressBar.style.display = 'none';
+                    statusEl.textContent = 'فشل الرفع';
+                    alert('حدث خطأ أثناء رفع الصورة: ' + msg);
+                },
+                done() {
+                    statusEl.textContent = 'تم الرفع ✅';
+                    progressFill.style.width = '100%';
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        progressFill.style.width = '0%';
+                        statusEl.textContent = '';
+                    }, 2500);
+                }
+            };
+        }
+
+        // رفع صورة داخل صف متكرر (منتج أو رأي عميل) وتحديث حقل الرابط + المعاينة الخاصة بنفس الصف
+        function uploadFileToStorage(fileInput, folder) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const row = fileInput.closest('.item-row');
+            const ui = bindUploadUi(fileInput.closest('.upload-wrap'));
+            const urlInput = row.querySelector('.prod-img-input, .testi-img-input');
+            const preview = row.querySelector('.prod-preview, .testi-preview');
+
+            ui.start();
+            performUpload(file, folder, {
+                onProgress: (pct) => ui.progress(pct),
+                onError: (err) => ui.error(err.message),
+                onComplete: (url) => {
+                    urlInput.value = url;
+                    if (preview) { preview.src = url; preview.style.display = 'inline-block'; }
+                    ui.done();
+                }
+            });
+        }
+
+        // رفع صورة لحقل مستقل (زي الشعار أو خلفية الواجهة الرئيسية) بمعرّفات ثابتة
+        function uploadSingleImage(fileInput, folder, targetInputId, previewId) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const ui = bindUploadUi(fileInput.closest('.upload-wrap'));
+            const urlInput = document.getElementById(targetInputId);
+            const preview = document.getElementById(previewId);
+
+            ui.start();
+            performUpload(file, folder, {
+                onProgress: (pct) => ui.progress(pct),
+                onError: (err) => ui.error(err.message),
+                onComplete: (url) => {
+                    urlInput.value = url;
+                    if (preview) { preview.src = url; preview.style.display = 'inline-block'; }
+                    ui.done();
+                }
+            });
+        }
+
 
         function addFaqRow(q = '', a = '') {
             const div = document.createElement('div'); div.className = 'item-row faq-item-row';
@@ -211,7 +345,7 @@
         function saveAllStoreData() {
             const products = [];
             document.querySelectorAll('.product-item').forEach(el => {
-                const inputs = el.querySelectorAll('input');
+                const inputs = el.querySelectorAll('input[type="text"]');
                 products.push({ name: inputs[0].value, price: inputs[1].value, img: inputs[2].value });
             });
 
@@ -233,6 +367,8 @@
 
             const finalData = {
                 brandName: document.getElementById('brandName').value,
+                logoUrl: document.getElementById('logoUrl').value,
+                heroBgUrl: document.getElementById('heroBgUrl').value,
                 heroTitle: document.getElementById('heroTitle').value,
                 heroDesc: document.getElementById('heroDesc').value,
                 offerTitle: document.getElementById('offerTitle').value,
