@@ -100,7 +100,31 @@ transition:.3s;
 transform:translateY(-6px);
 box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
-        @media (max-width: 500px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .prod-img-wrapper { aspect-ratio: 1/1 !important; } .prod-title { font-size: 13px !important; } .prod-price { font-size: 15px !important; } .btn-prod-order { font-size: 12px !important; padding: 8px !important; } }
+        @media(max-width:768px){
+.floating-wa{
+
+width:52px;
+
+height:52px;
+
+font-size:24px;
+
+left:15px;
+
+bottom:15px;
+
+}
+.prod-card{
+min-width:180px;
+max-width:180px;
+}
+
+.prod-title{
+font-size:13px;
+}
+
+.prod-price{
+font-si { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .prod-img-wrapper { aspect-ratio: 1/1 !important; } .prod-title { font-size: 13px !important; } .prod-price { font-size: 15px !important; } .btn-prod-order { font-size: 12px !important; padding: 8px !important; } }
         .prod-card { background: #fff; border: 1px solid #eee; border-radius: 4px; overflow: hidden; transition: var(--transition); text-align: right; display: flex; flex-direction: column; }
         .prod-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); transform: translateY(-3px); }
         .prod-img-wrapper { width: 100%; aspect-ratio: 1/1; position: relative; background: #fafafa; }
@@ -111,7 +135,7 @@ box-shadow:0 10px 25px rgba(0,0,0,.12);
         .prod-desc { font-size: 12px; color: var(--text-light); margin-bottom: 10px; line-clamp: 2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .prod-price { color: var(--accent); font-weight: 700; font-size: 17px; margin-bottom: 12px; }
         .btn-prod-order { background: var(--primary); color: white; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; text-decoration: none; font-weight: 600; border-radius: 4px; transition: var(--transition); text-align: center; font-size: 13px; margin-top: auto; }
-        .btn-prod-order:hover { background: #25D366; }
+        .
 
         /* 6. Offers Banner */
         .offers-banner { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1479064555552-3ef4979f8908?q=80&w=1600') no-repeat center center/cover; color: white; padding: 80px 20px; }
@@ -140,7 +164,51 @@ box-shadow:0 10px 25px rgba(0,0,0,.12);
         footer { background: #000; color: #777; padding: 30px 5%; font-size: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-top: 1px solid #222; }
         .footer-socials a { color: white; margin-right: 15px; font-size: 18px; transition: var(--transition); }
         .footer-socials a:hover { color: var(--accent); }
+/* زر واتساب ثابت */
 
+.floating-wa{
+
+position:fixed;
+
+bottom:20px;
+
+left:20px;
+
+width:60px;
+
+height:60px;
+
+background:#25D366;
+
+color:#fff;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:30px;
+
+text-decoration:none;
+
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+z-index:9999;
+
+transition:.3s;
+
+}
+
+.floating-wa:hover{
+
+transform:scale(1.1);
+
+background:#1ebe5d;
+
+}
         @media (max-width:768px){
 
 .nav-links{
@@ -226,6 +294,9 @@ text-align: .nav-links { display: none; } .hero h1 { font-size: 30px; } footer {
             <a href="#" id="ig-link" target="_blank"><i class="fab fa-instagram"></i></a>
         </div>
     </footer>
+<a href="#" id="floating-wa" class="floating-wa" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
 
     <script>
         // إعدادات Firebase الخاصة بمشروعك
@@ -260,6 +331,7 @@ text-align: .nav-links { display: none; } .hero h1 { font-size: 30px; } footer {
 
             // تحديث روابط التواصل والواتساب
             const waUrl = `https://api.whatsapp.com/send?phone=${currentWhatsapp}`;
+document.getElementById("floating-wa").href = waUrl;
             document.getElementById('header-wa-btn').href = waUrl;
             document.getElementById('hero-wa-btn').href = waUrl;
             document.getElementById('fb-link').href = data.facebook || "https://facebook.com";
@@ -294,9 +366,7 @@ text-align: .nav-links { display: none; } .hero h1 { font-size: 30px; } footer {
                                 <div>
                                     <h3 class="prod-title">${p.name}</h3>
                                 </div>
-                                <div>
-                                    <p class="prod-price">${p.price}</p>
-                                    <a href="${waOrderUrl}" class="btn-prod-order" target="_blank"><i class="fab fa-whatsapp"></i> اطلب عبر واتساب</a>
+                                <div><p class="prod-price">${p.price}</p>
                                 </div>
                             </div>
                         </div>`;
@@ -342,6 +412,12 @@ text-align: .nav-links { display: none; } .hero h1 { font-size: 30px; } footer {
                 item.classList.add('active');
             }
         }
-    </script>
+    const productSlider=document.getElementById("products-container");
+
+let direction=1;
+
+setInterval(()=>{
+
+if(!productSlider)retu
 </body>
 </html>
